@@ -1,0 +1,29 @@
+stories:
+- story: circle
+  steps:
+  - intent: circle
+  - action: utter_circle
+- story: circle
+  steps:
+  - intent: circle
+  - action: utter_circle
+- story: circle
+  steps:
+  - intent: circle
+  - action: utter_circle
+- story: circle
+  steps:
+  - intent: circle
+  - action: utter_circle
+- story: circle
+  steps:
+  - intent: circle
+  - action: utter_circle
+- story: greet
+  steps:
+  - intent: greet
+  - action: utter_greet
+- story: greet
+  steps:
+  - intent: greet
+  - action: utter_greet

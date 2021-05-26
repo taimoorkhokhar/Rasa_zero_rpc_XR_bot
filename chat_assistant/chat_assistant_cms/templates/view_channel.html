@@ -1,0 +1,83 @@
+{% extends "base_layout.html" %}
+{% block content %}
+
+	<div class="main-container">
+		<div class="pd-ltr-20 xs-pd-20-10">
+			<div class="min-height-200px">
+				<!-- Bordered table  start -->
+				<div class="pd-20 card-box mb-30">
+					<div class="clearfix mb-20">
+						<div class="pull-left">
+							<h4 class="text-blue h4">{{ channel_name }}</h4>
+							<!-- <p>Add <code>.table  .table-bordered</code> for borders on all sides of the table and cells.</p> -->
+						</div>
+						<div class="pull-right">
+							<div class="pd-20 ">
+								<a href="#" class="btn btn-primary btn-sm scroll-click" data-toggle="modal" data-target="#bd-example-modal-lg" type="button">
+									Add Assistant
+								</a>
+								<div class="modal fade bs-example-modal-lg" id="bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+									<div class="modal-dialog modal-lg modal-dialog-centered">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h4 class="modal-title" id="myLargeModalLabel">Create Assistant For {{ channel_name }}</h4>
+												<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+											</div>
+											<form action="{% url 'chat_assistant_cms:add_assistant' collective_name=collective_name channel_name=channel_name%}">
+												<div class="modal-body">
+													
+													<div class="form-group row">
+														<label class="col-sm-12 col-md-3 col-form-label">Assistant ID</label>
+														<div class="col-sm-12 col-md-9">
+															<input class="form-control" type="text" name="assistant_id" required>
+														</div>
+													</div>
+													<div class="form-group row">
+														<label class="col-sm-12 col-md-3 col-form-label">Assistant Name</label>
+														<div class="col-sm-12 col-md-9">
+															<input class="form-control" type="text" name="assistant_name" required>
+														</div>
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+													<button type="submit" class="btn btn-primary"  >Add</button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<table class="data-table table hover nowrap">
+						<thead>
+							<tr>
+								<th scope="col">#</th>
+								<th scope="col">Assistant</th>
+								<th scope="col">Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for assistant in assistants %}
+								<tr>
+									<th scope="row">{{ forloop.counter }}</th>
+									<td>{{ assistant.assistant_name }}</td>
+									<td>
+										<a href="{% url 'chat_assistant_cms:view_assistant' assistant_id=assistant.id %}" class="btn btn-primary btn-sm scroll-click" rel="content-y" role="button">View</a>
+										<a href="{% url 'chat_assistant_cms:edit_assistant' assistant_id=assistant.id %}" class="btn btn-warning btn-sm scroll-click" rel="content-y" role="button">Edit</a>
+										<a href="{% url 'chat_assistant_cms:delete_assistant' assistant_id=assistant.id assistants=assistants %}" class="btn btn-danger btn-sm scroll-click" rel="content-y" role="button">Delete</a>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+		
+			</div>
+			<div class="footer-wrap pd-20 mb-20 card-box">
+				SUPER REALITY - BUILD SOMETHING GREAT TOGETHER 
+			</div>
+		</div>
+	</div>
+{% endblock %}

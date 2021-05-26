@@ -1,0 +1,41 @@
+{
+  "name": "@xrengine/bot",
+  "version": "0.2.27",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/XRFoundation/XREngine.git"
+  },
+  "engines": {
+    "yarn": ">= 0.18.0"
+  },
+  "npmClient": "yarn",
+  "jest": "ts-jest",
+  "main": "src/xrengine-bot.js",
+  "scripts": {
+    "start": "node run-bot.js",
+    "validate": "yarn run lint && yarn run test",
+    "test": "echo \"TODO: Add Testing to Client\" && exit 0",
+    "lint": "eslint --fix --quiet \"*.ts\" \"**/*.ts\" \"**/*.tsx\""
+  },
+  "dependencies": {
+    "@google-cloud/agones-sdk": "1.14.0",
+    "puppeteer": "9.0.0",
+    "three": "0.128.0"
+  },
+  "devDependencies": {
+    "@types/node": "13.13.51",
+    "@types/react": "17.0.4",
+    "@types/react-dom": "17.0.3",
+    "@types/three": "0.127.1",
+    "config": "3.3.6",
+    "cross-env": "7.0.3",
+    "eslint": "7.25.0",
+    "eslint-plugin-react": "7.23.2",
+    "semantic-release": "17.4.2",
+    "semantic-release-monorepo": "7.0.5",
+    "typescript": "4.2.4",
+    "uuid": "8.3.2"
+  },
+  "license": "ISC"
+}

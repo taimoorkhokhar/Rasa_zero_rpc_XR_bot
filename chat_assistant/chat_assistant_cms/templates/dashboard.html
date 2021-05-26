@@ -1,0 +1,88 @@
+{% extends "base_layout.html" %}
+{% block content %}
+
+	<div class="main-container">
+		<div class="pd-ltr-20 xs-pd-20-10">
+			<div class="min-height-200px">
+				<!-- Bordered table  start -->
+				<div class="pd-20 card-box mb-30">
+					<div class="clearfix mb-20">
+						<div class="pull-left">
+							<h4 class="text-blue h4">Dashboard</h4>
+							<!-- <p>Add <code>.table  .table-bordered</code> for borders on all sides of the table and cells.</p> -->
+						</div>
+						<div class="pull-right">
+							<div class="pd-tb-20 d-inline">
+								<a href="#" class="btn btn-info btn-sm scroll-click" rel="content-y" data-toggle="modal" data-target="#bd3-example-modal-lg"  data-toggle="collapse" role="button"><i class="fa fa-plus"></i> Create Channel</a>
+								<div class="modal fade bs-example-modal-lg" id="bd3-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+									<div class="modal-dialog modal-lg modal-dialog-centered">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h4 class="modal-title" id="myLargeModalLabel">Create a new channel</h4>
+												<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+											</div>
+											<form action="{% url 'chat_assistant_cms:create_channel' %}">
+												<div class="modal-body">
+													<div class="form-group row">
+														<label class="col-sm-12 col-md-3 col-form-label">Collective Name</label>
+														<div class="col-sm-12 col-md-9">
+															<select class="selectpicker form-control" name="collective_name" data-style="btn-outline-primary" data-size="5">
+																<optgroup label="Collective" data-max-options="2" required>
+																	{% for collective_dic in collective_list %}
+																		{% for collective_name, channel_list in collective_dic.items %}
+
+																			<option>{{ collective_name }}</option>
+																		{% endfor %}
+																	{% endfor %}
+																</optgroup>
+															</select>
+														</div>
+													</div>
+													<div class="form-group row">
+														<label class="col-sm-12 col-md-3 col-form-label">Channel Name</label>
+														<div class="col-sm-12 col-md-9">
+															<input type="text" class="form-control" name="channel_name" required>
+														</div>
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+													<button type="submit" class="btn btn-primary"  >Create</button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col">#</th>
+								<th scope="col">Assistant</th>
+								<th scope="col">Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+							</tr>
+						</tbody>
+					</table>
+					<!-- <div class="collapse collapse-box" id="border-table">
+						<div class="code-box">
+							<div class="clearfix">
+								<a href="javascript:;" class="btn btn-primary btn-sm code-copy pull-left"  data-clipboard-target="#border-table-code"><i class="fa fa-clipboard"></i> Copy Code</a>
+								<a href="#border-table" class="btn btn-primary btn-sm pull-right" rel="content-y"  data-toggle="collapse" role="button"><i class="fa fa-eye-slash"></i> Hide Code</a>
+							</div>
+						</div>
+					</div> -->
+				</div>
+		
+			</div>
+			<div class="footer-wrap pd-20 mb-20 card-box">
+				SUPER REALITY - BUILD SOMETHING GREAT TOGETHER 
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- Basic Page Info -->
+	<meta charset="utf-8">
+	<title>SUPER REALITY - BUILD SOMETHING GREAT TOGETHER</title>
+
+	 <!-- Local Styles -->
+	 {% load static %}
+
+	<!-- Site favicon -->
+	<link rel="apple-touch-icon" sizes="180x180" href="{% static 'cms/vendors/images/logo-icon.png' %}">
+	<link rel="icon" type="image/png" sizes="32x32" href="{% static 'cms/vendors/images/logo-icon.png' %}">
+	<link rel="icon" type="image/png" sizes="16x16" href="{% static 'cms/vendors/images/logo-icon.png' %}">
+
+	<!-- Mobile Specific Metas -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<!-- Google Font -->
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" href="{% static 'cms/vendors/styles/core.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'cms/vendors/styles/icon-font.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'cms/src/plugins/sweetalert2/sweetalert2.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'cms/src/plugins/datatables/css/dataTables.bootstrap4.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'cms/src/plugins/datatables/css/responsive.bootstrap4.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'cms/src/plugins/dropzone/src/dropzone.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'cms/vendors/styles/style.css' %}">
+    <!-- switchery css -->
+	<link rel="stylesheet" type="text/css" href="{% static 'cms/src/plugins/switchery/switchery.min.css' %}">
+	<!-- bootstrap-tagsinput css -->
+	<link rel="stylesheet" type="text/css" href="{% static 'cms/src/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css' %}">
+	<!-- bootstrap-touchspin css -->
+	<link rel="stylesheet" type="text/css" href="{% static 'cms/src/plugins/bootstrap-touchspin/jquery.bootstrap-touchspin.css' %}">
+
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-119386393-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-119386393-1');
+	</script>
+</head>
+<body class="header-dark sidebar-dark">
+	<!-- <div class="pre-loader">
+		<div class="pre-loader-box">
+			<div class="loader-logo"><img src="{% static 'cms/vendors/images/logo-icon.png' %}" alt=""  width="350" height="350" ></div>
+			<div class='loader-progress' id="progress_div">
+				<div class='bar' id='bar1'></div>
+			</div>
+			<div class='percent' id='percent1'>0%</div>
+			<div class="loading-text">
+				Loading...
+			</div>
+		</div>
+	</div> -->
+	<div class="header">
+		<div class="header-left">
+			<div class="menu-icon dw dw-menu"></div>
+		</div>
+	</div>
+
+
+	<div class="left-side-bar">
+		<div class="brand-logo">
+			<!-- <a href="index.html"> -->
+				<!-- <img src="{% static 'cms/vendors/images/logo-icon.png' %}" width="257" height="55" alt="" class="dark-logo">
+				<img src="{% static 'cms/vendors/images/logo-icon.png' %}" width="257" height="55" alt="" class="light-logo"> -->
+			<!-- </a> -->
+			<div class="close-sidebar" data-toggle="left-sidebar-close">
+				<i class="ion-close-round"></i>
+			</div>
+		</div>
+		<div class="menu-block customscroll">
+			<div class="sidebar-menu">
+				<ul id="accordion-menu">
+                    {% for collective_dic in collective_list %}
+                        {% for collective_name, channel_list in collective_dic.items %}
+                            <li class="dropdown">
+                                <a href="javascript:;" class="dropdown-toggle">
+                                    <span class="micon fa fa-bars"></span><span class="mtext" style="white-space: pre-wrap;">{{ collective_name }}</span>
+                                </a>
+                                <ul class="submenu">
+                                    {% for channel_name in channel_list %}
+                                        <li><a href="{% url 'chat_assistant_cms:view_channel' collective_name=collective_name channel_name=channel_name %}">{{ channel_name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        {% endfor %}
+                    {% endfor %}
+
+				</ul>
+			</div>
+		</div>
+	</div>
+    <div class="mobile-menu-overlay"></div>
+
+    {% block content %}
+
+    {% endblock content %}
+
+
+    	<!-- js -->
+	<script src="{% static 'cms/vendors/scripts/core.js' %}"></script>
+	<script src="{% static 'cms/vendors/scripts/script.min.js' %}"></script>
+	<script src="{% static 'cms/vendors/scripts/process.js' %}"></script>
+	<script src="{% static 'cms/vendors/scripts/layout-settings.js' %}"></script>
+	<script src="{% static 'cms/src/plugins/sweetalert2/sweetalert2.all.js' %}"></script>
+	<script src="{% static 'cms/src/plugins/sweetalert2/sweet-alert.init.js' %}"></script>
+	<script src="{% static 'cms/vendors/scripts/custom-alert.js' %}"></script>
+	<script src="{% static 'cms/src/plugins/dropzone/src/dropzone.js' %}"></script>
+	
+    <!-- switchery js -->
+	<script src="{% static 'cms/src/plugins/switchery/switchery.min.js' %}"></script>
+	<!-- bootstrap-tagsinput js -->
+	<script src="{% static 'cms/src/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js' %}"></script>
+	<!-- bootstrap-touchspin js -->
+	<script src="{% static 'cms/src/plugins/bootstrap-touchspin/jquery.bootstrap-touchspin.js' %}"></script>
+	<script src="{% static 'cms/vendors/scripts/advanced-components.js' %}"></script>
+	<script src="{% static 'cms/vendors/scripts/chat-assistant-api-ajax.js' %}"></script>
+	<script src="{% static 'src/plugins/datatables/js/jquery.dataTables.min.js' %}"></script>
+	<script src="{% static 'src/plugins/datatables/js/dataTables.bootstrap4.min.js' %}"></script>
+	<script src="{% static 'src/plugins/datatables/js/dataTables.responsive.min.js' %}"></script>
+	<script src="{% static 'src/plugins/datatables/js/responsive.bootstrap4.min.js' %}"></script>
+	<!-- Datatable Setting js -->
+	<script src="{% static 'cms/vendors/scripts/datatable-setting.js' %}"></script></body>
+	<script src="{% static 'cms/vendors/scripts/cms-app.js' %}" defer></script>
+
+	{% if id %}
+		<script>
+			Dropzone.autoDiscover = false;
+			$(".dropzone").dropzone({
+				addRemoveLinks: true,
+				removedfile: function(file) {
+					var name = file.name;
+					var _ref;
+					return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+				},
+				url: "{% url 'chat_assistant_cms:upload_examples_csv' assistant_id=id %}",
+				autoProcessQueue: false,
+				method: "POST",
+				dictResponseError: 'Error uploading file!',
+				headers: {'X-CSRFToken': window.CSRF_TOKEN},
+				init: function () {
+					var myDropzone = this;
+					var addButton = $("#submit-btn-csv");
+
+					// First change the button to actually tell Dropzone to process the queue.
+					addButton[0].addEventListener("click", function (e) {
+						// Make sure that the form isn't actually being sent.
+						e.preventDefault();
+						e.stopPropagation();
+						if (myDropzone.getQueuedFiles().length > 0) {
+							myDropzone.processQueue();
+						} else {
+							$(".dropzone").submit();
+						}
+					});
+
+					this.on("successmultiple", function (files, response) {
+						console.log("files===>", files)
+						console.log("response===>", response)
+						setTimeout(function () {
+							$(".dropzone").submit();
+						}, 1000);
+					});
+				},
+				sending: function (file, xhr, formData) {
+					formData.append("csv_file", file);
+				},
+				success: (file, response) => {
+					location.reload()
+				}
+			});
+		</script>
+	{% endif %}
+</body>
+</html>

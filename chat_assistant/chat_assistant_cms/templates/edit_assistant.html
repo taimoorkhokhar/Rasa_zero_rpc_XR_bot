@@ -1,0 +1,141 @@
+{% extends "base_layout.html" %}
+{% block content %}
+
+	<div class="main-container">
+		<div class="pd-ltr-20 xs-pd-20-10">
+			<div class="pd-20 card-box mb-30">
+                <div class="clearfix">
+                    <div class="pull-left">
+                        <h4 class="text-blue h4">{{ assistant_name }}</h4>
+                    </div>
+                    <div class="pull-right">
+                        <div class="pd-tb-20 d-inline">
+                            <a href="#" class="btn btn-info btn-md scroll-click" rel="content-y" data-toggle="modal" data-target="#bd2-example-modal-lg"  data-toggle="collapse" role="button"><i class="fa fa-plus"></i> Add Example</a>
+                            <div class="modal fade bs-example-modal-lg" id="bd2-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title" id="myLargeModalLabel">Add Example For {{ assistant_name }}</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        </div>
+                                        <form action="{% url 'chat_assistant_cms:add_example' assistant_id=id%}">
+                                            <div class="modal-body">
+                                                
+                                                <div class="form-group row">
+                                                    <label class="col-sm-12 col-md-3 col-form-label">Intent</label>
+                                                    <div class="col-sm-12 col-md-9">
+                                                        <input type="text" class="form-control" name="intent" required>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-sm-12 col-md-3 col-form-label">Questions</label>
+                                                    <div class="col-sm-12 col-md-9">
+                                                        <select multiple data-role="tagsinput" name="questions" required>
+                                                                <option value=''></option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-sm-12 col-md-3 col-form-label">Responses</label>
+                                                    <div class="col-sm-12 col-md-9">
+                                                        <select multiple data-role="tagsinput" name="responses" required>
+                                                            <option value=''></option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary"  >Add</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pd-tb-20 d-inline">
+                            <a href="#" class="btn btn-success btn-md scroll-click" rel="content-y" data-toggle="modal" data-target="#bd3-example-modal-lg"  data-toggle="collapse" role="button"><i class="fa fa-upload"></i> Upload CSV</a>
+                            <div class="modal fade bs-example-modal-lg" id="bd3-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title" id="myLargeModalLabel">Upload Example For {{ assistant_name }}</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="pd-ltr-20 xs-pd-20-10">
+                                                <div class="min-height-200px">
+                                                    <div class="pd-20 card-box mb-30">
+                                                        {% csrf_token %}
+                                                        <form class="dropzone" action="#" id="csv_file">
+                                                            <div class="fallback">
+                                                                <input type="file" name="csv_file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required/>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button id="submit-btn-csv" type="submit" class="btn btn-primary"  >Upload</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#form-grid-form" id="train-assistant" class="btn btn-dark btn-md scroll-click" rel="content-y"  data-toggle="collapse" role="button" data-assistant-id="{{ id }}">
+                            Train Assistant
+                            <div class="spinner-border spinner-border-sm text-light d-none" role="status"></div>
+                        </a>
+                        <button type="button" class="btn mb-20 btn-primary btn-block d-none" id="train-success-popup"></button>
+                        <button type="button" class="btn mb-20 btn-primary btn-block d-none" id="train-error-popup"></button>
+                    </div>
+                </div>
+                
+                <div class="mt-30" id="edit-assistant-table">
+                    <button class="btn btn-danger pull-right mb-10" id="save-assistant-data" disabled>Save Changes</button>
+                    <div class="pd-20 card-box mb-30 table-responsive">
+                        <table class="data-table table hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col" style="min-width:150px">Intent</th>
+                                    <th scope="col" style="min-width:150px">Questions</th>
+                                    <th scope="col" style="min-width:150px">Responses</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for intent_dict in intent_example_response %}
+                                    {% for intent, values in intent_dict.items %}
+                                        <tr class="assistant-example-row"  data-intent="{{ intent }}"  data-assistant-id="{{ id }}">
+                                            <td>
+                                                <input type="text" class="form-control" value='{{ intent }}'>
+                                            </td>
+                                            <td>
+                                                <select class="edit-questions" name="edit_questions" multiple data-role="tagsinput" required>
+                                                    {% for example in values.0 %}
+                                                        <option class="questions-option" value='{{ example }}'>{{ example }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="edit-responses" name="edit_responses" multiple data-role="tagsinput" required  >
+                                                    {% for example in values.1 %}
+                                                        <option class="responses-option" value='{{ example }}'>{{ example }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+			<div class="footer-wrap pd-20 mb-20 card-box">
+				SUPER REALITY - BUILD SOMETHING GREAT TOGETHER 
+			</div>
+		</div>
+    </div>
+{% endblock %}

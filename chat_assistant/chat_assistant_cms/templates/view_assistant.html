@@ -1,0 +1,56 @@
+{% extends "base_layout.html" %}
+{% block content %}
+
+	<div class="main-container">
+		<div class="pd-ltr-20 xs-pd-20-10">
+			<div class="pd-20 card-box mb-30">
+                <div class="clearfix">
+                    <div class="pull-left">
+                        <h4 class="text-blue h4">{{ assistant_name }}</h4>
+                    </div>
+                </div>
+                <form class="mt-30">
+                    <div class="pd-20 card-box mb-30 table-responsive">
+                        <table class="data-table table hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col" style="min-width:150px">Intent</th>
+                                    <th scope="col" style="min-width:150px">Questions</th>
+                                    <th scope="col" style="min-width:150px">Responses</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for intent_dict in intent_example_response %}
+                                    {% for intent, values in intent_dict.items %}
+                                        <tr>
+                                            <td>
+                                                <input type="text" class="form-control" value='{{ intent }}' readonly>
+                                            </td>
+                                            <td>
+                                                <select id="edit-questions" multiple data-role="tagsinput" disabled>
+                                                    {% for example in values.0 %}
+                                                        <option value='{{ example }}'>{{ example }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select id="edit-responses" multiple data-role="tagsinput" disabled>
+                                                    {% for example in values.1 %}
+                                                        <option value='{{ example }}'>{{ example }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+			<div class="footer-wrap pd-20 mb-20 card-box">
+				SUPER REALITY - BUILD SOMETHING GREAT TOGETHER 
+			</div>
+		</div>
+    </div>
+{% endblock %}

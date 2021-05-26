@@ -1,0 +1,16 @@
+version: '2.0'
+nlu:
+  - intent: circle
+    examples: |
+      - hey
+      - hey
+      - hey
+      - hey
+      - hey
+
+  - intent: greet
+    examples: |
+      - 
+      - 
+      - hello
+      - hi
