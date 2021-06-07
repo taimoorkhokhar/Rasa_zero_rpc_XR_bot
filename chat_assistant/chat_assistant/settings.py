@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework_swagger',
     'chat_assistant_api',
-    'chat_assistant_api.apps.RasaApiConfig',
     'chat_assistant_app',
     'chat_assistant_cms',
     
