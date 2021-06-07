@@ -46,7 +46,6 @@ class TokenViewSet(viewsets.ViewSet):
         })
 
 
-
 class SessionViewSet(viewsets.ViewSet):
     """Checks username and password and creates a user session."""
 

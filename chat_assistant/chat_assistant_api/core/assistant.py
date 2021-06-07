@@ -5,8 +5,8 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.renderers import (
-                                        HTMLFormRenderer, 
-                                        JSONRenderer, 
+                                        HTMLFormRenderer,
+                                        JSONRenderer,
                                         BrowsableAPIRenderer,
                                     )
 from django.http import JsonResponse, HttpResponse
@@ -15,21 +15,28 @@ from celery.result import AsyncResult
 from ..tasks import train_assistant_task
 from .. import serializers
 from .. import models
-from ..apps import ProfilesApiConfig
+from ..apps import RasaApiConfig
 import torch
 import asyncio
+from rasa.core.agent import Agent
+from rasa.utils.endpoints import EndpointConfig
+from os import path
+from django.conf import settings
 
 
 @csrf_exempt
 def get_assistant_response(assistant_id, question):
-    agent = ProfilesApiConfig.agents.get(assistant_id)
-    if agent.is_ready():
+    load_model = settings.RASA_MODELS + assistant_id + ".tar.gz"
+    if(path.exists(load_model)):
+        agent = Agent.load(load_model, action_endpoint=EndpointConfig(settings.ACTION_ENDPOINT))
         loop = asyncio.get_event_loop()
         reply = loop.run_until_complete(agent.handle_text(question))
         agent_response_data = agent.tracker_store.retrieve_full_tracker("default")._latest_message_data()
         intent = agent_response_data.get('intent',{})
 
         return reply, intent
+
+    raise Exception("No Trained Agent Found..!")
 
 
 
@@ -221,7 +228,7 @@ class AskQuestion(APIView):
                 # Initialize history variable
                 chat_history_ids = None
                 chat_round = 0
-                response = generate_response(ProfilesApiConfig.tokenizer, ProfilesApiConfig.gpt_model, chat_round, chat_history_ids, question)
+                response = generate_response(RasaApiConfig.tokenizer, RasaApiConfig.gpt_model, chat_round, chat_history_ids, question)
                 return Response({assistant_id: response})
         else:
             return Response(

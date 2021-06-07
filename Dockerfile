@@ -1,6 +1,3 @@
-# not slim because we need github depedencies
-# FROM node:lts-buster
-# FROM docker:dind
 FROM node:12
 
 RUN echo "deb [arch=amd64] http://nginx.org/packages/mainline/ubuntu/ eoan nginx\ndeb-src http://nginx.org/packages/mainline/ubuntu/ eoan nginx" >> /etc/apt/sources.list.d/nginx.list
@@ -10,10 +7,27 @@ RUN apt update && apt install -y libasound2 libatk1.0-0 libatk-bridge2.0-0 libc6
 RUN apt install -y build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev wget libbz2-dev
 RUN apt-get install -y redis-server
 
-# RUN apt-get install -y supervisor
-
 # Create app directory
 WORKDIR /app
+
+# python3.7 setup
+RUN wget https://www.python.org/ftp/python/3.7.5/Python-3.7.5.tgz
+RUN tar -xf Python-3.7.5.tgz
+WORKDIR /app/Python-3.7.5
+RUN ./configure --enable-optimizations
+RUN make -j 8
+RUN make altinstall
+RUN python3.7 -m pip install --upgrade pip
+
+WORKDIR /app
+
+# dependecies for zerorpc bridge and rasa app
+RUN pip3.7 install zerorpc
+RUN pip3.7 install celery
+RUN pip3.7 install gunicorn
+RUN npm install --save zeromq
+RUN npm install --save zerorpc
+RUN apt-get install -y supervisor
 
 # to make use of caching, copy only package files and install dependencies
 COPY package.json .
@@ -23,62 +37,24 @@ ADD /supervisor /app
 ADD /core /app
 ADD /chat_assistant/requirements.txt /app
 
-# RUN apt-get update || : && apt-get install python -y
-# RUN apt-get install python -y
-# RUN apt-get install python3-pip -y
-
-# RUN apt-get install software-properties-common -y
-# RUN add-apt-repository ppa:deadsnakes/ppa   
-# RUN apt install python3.7
-
-RUN wget https://www.python.org/ftp/python/3.7.4/Python-3.7.4.tgz
-RUN tar -xf Python-3.7.4.tgz
-
-RUN ls
-
-WORKDIR /app/Python-3.7.4
-
-RUN ./configure --enable-optimizations
-RUN make -j 8
-RUN make altinstall
-RUN python3.7 -m pip install --upgrade pip
-
-WORKDIR /app
-
-RUN pip3 install zerorpc
-RUN npm install zerorpc
-RUN apt-get install -y gunicorn
-RUN apt-get install \
-	gcc nano \
-	postgresql postgresql-contrib -y
-RUN apt-get install -y postgresql supervisor
-RUN pip3 install -r requirements.txt --use-deprecated=legacy-resolver
-
-
-
 # setup postgresql
+RUN apt-get install -y postgresql postgresql-contrib postgresql-client
+USER postgres
+RUN    /etc/init.d/postgresql start &&\
+    psql --command "Alter USER postgres WITH SUPERUSER PASSWORD 'admin123456';" &&\
+    createdb -O postgres admin123456
+RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.6/main/pg_hba.conf
+RUN echo "listen_addresses='*'" >> /etc/postgresql/9.6/main/postgresql.conf
+USER root
+# EXPOSE 5432
+VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 
-ADD /scripts/set-psql-password.sh /tmp/set-psql-password.sh
-RUN /bin/sh /tmp/set-psql-password.sh
-RUN sed -i "/^#listen_addresses/i listen_addresses='*'" /etc/postgresql/9.1/main/postgresql.conf
-RUN sed -i "/^# DO NOT DISABLE\!/i # Allow access from any IP address" /etc/postgresql/9.1/main/pg_hba.conf
-RUN sed -i "/^# DO NOT DISABLE\!/i host all all 0.0.0.0/0 md5\n\n\n" /etc/postgresql/9.1/main/pg_hba.conf
-
-# set root password
-RUN echo "root:root" | chpasswd                        
-# clean packages
-RUN apt-get clean
-RUN rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
-
-# expose postgresql port
-# EXPOSE 22 5432
-
-# volumes
-VOLUME ["/var/lib/postgresql/9.1/main"]
-
-
-
-#RUN  yarn ci --verbose  # we should make lockfile or shrinkwrap then use yarn ci for predictable builds
+# python pakages installation
+RUN pip3.7 install -r requirements.txt --use-deprecated=legacy-resolver
+RUN pip3.7 install git+https://github.com/huggingface/transformers.git
+RUN pip3.7 install rasa[spacy]
+RUN python3.7 -m spacy download en_core_web_md
+RUN python3.7 -m spacy link en_core_web_md en
 RUN yarn install --production=false
 
 COPY . .
@@ -90,7 +66,5 @@ ENV PORT=3030
 
 EXPOSE 3030
 EXPOSE 8000
-EXPOSE 8085
 
-# CMD ["scripts/start-bot.sh"]
 CMD ["supervisord","-c","/app/service_script.conf"]

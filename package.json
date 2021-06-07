@@ -21,7 +21,8 @@
   "dependencies": {
     "@google-cloud/agones-sdk": "1.14.0",
     "puppeteer": "9.0.0",
-    "three": "0.128.0"
+    "three": "0.128.0",
+    "zerorpc": "git+https://github.com/0rpc/zerorpc-node.git"
   },
   "devDependencies": {
     "@types/node": "13.13.51",

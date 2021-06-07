@@ -24,7 +24,7 @@ SECRET_KEY = '^cn5*sm4_zjcfrb38&vv4=9$5d-lg8=yqzx!c0i(ed1vj3!+2o'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['54.215.246.31', '127.0.0.1']
+ALLOWED_HOSTS = ['54.151.53.36', '127.0.0.1']
 
 # Celery settings
 CELERY_BROKER_URL = 'redis://redis:6379/0'
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework_swagger',
     'chat_assistant_api',
+    'chat_assistant_api.apps.RasaApiConfig',
     'chat_assistant_app',
     'chat_assistant_cms',
     
@@ -90,7 +91,7 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'admin123456',
-        'HOST': 'db',
+        'HOST': '127.0.0.1',
         'PORT': 5432,
     }
 }

@@ -3,11 +3,6 @@ const AgonesSDK = require('@google-cloud/agones-sdk');
 const { BotAction } = require('./src/bot-action');
 const BotManager = require('./src/bot-manager');
 
-const zerorpc = require("zerorpc");
-const client = new zerorpc.Client();
-client.connect("tcp://127.0.0.1:4242");
-
-
 const agonesSDK = new AgonesSDK();
 
 
@@ -51,10 +46,6 @@ async function run() {
     botManager.addAction("bot1", BotAction.keyPress("KeyS", moveDuration));
     botManager.addAction("bot1", BotAction.keyPress("KeyA", moveDuration));
     botManager.addAction("bot1", BotAction.sendMessage("Hello World! This is bot1."));
-
-    client.invoke("streaming_range", 10, 20, 2, function(error, res, more) {
-        console.log("Respones => ", res);
-    });
 
     // botManager.addAction("bot1", BotAction.receiveAudio(60000));
    

@@ -1,26 +1,33 @@
 from django.apps import AppConfig
 from django.conf import settings
-import os
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from rasa.core.agent import Agent
-from rasa.utils.endpoints import EndpointConfig
+from django.db.models.signals import post_migrate
+from django.contrib.auth.apps import AuthConfig
+from django.contrib.auth.models import User
 
 
-class ProfilesApiConfig(AppConfig):
+USERNAME = "super_reality_user"
+PASSWORD = "super_reality"
+
+
+def create_test_user(sender, **kwargs):
+    if not settings.DEBUG:
+        return
+    if not isinstance(sender, AuthConfig):
+        return
+    manager = User.objects
+    try:
+        manager.get(username=USERNAME)
+    except User.DoesNotExist:
+        manager.create_superuser(USERNAME, 'nick@gamegen.com', PASSWORD)
+
+
+class RasaApiConfig(AppConfig):
     name = 'chat_assistant_api'
     
     # Initialize tokenizer and model
     print("Loading GPTDialog model...")
     tokenizer = AutoTokenizer.from_pretrained(settings.MODELS)
     gpt_model = AutoModelForCausalLM.from_pretrained(settings.MODELS)
-    
-    print("Loading Rasa Assistant models...")
-    models = os.listdir(settings.RASA_MODELS)
-    agents = {}
-    for model in models:
-        load_model = settings.RASA_MODELS + model
-        agent = Agent.load(load_model, action_endpoint=EndpointConfig(settings.ACTION_ENDPOINT))
-        model_id = model.split(".")[0]
-        agents.update(
-                       {str(model_id):agent}
-                      )
+    def ready(self):
+        post_migrate.connect(create_test_user)
