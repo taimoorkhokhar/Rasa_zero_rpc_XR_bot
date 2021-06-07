@@ -191,8 +191,8 @@ class TrainAssistant(APIView):
 
 
 class AskQuestion(APIView):
-    authentication_classes = (TokenAuthentication, SessionAuthentication)
-    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication, SessionAuthentication)
+    # permission_classes = (IsAuthenticated,)
     serializer_class = serializers.AskQuestionSerializer
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
     
